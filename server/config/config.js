@@ -10,3 +10,22 @@
 ahora si no existe quiere decir que nosotros debemos de ponerla
  */
 process.env.PORT = process.env.PORT || 3000
+
+
+/** Ambientes. Si existe la utilizo y estoy en producción sino
+ * sino estoy utilizando el entorno de desarrollo
+ */
+process.env.NODE_ENV = process.env.NODE_ENV || 'dev';
+
+/**
+ * Base de datos. Si 'dev' estoy en desarrollo sino utilizo
+ * lo que tengo en la nube porque estoy en producción.
+ */
+let conexion;
+if (process.env.NODE_ENV === 'dev') {
+    conexion = 'mongodb://localhost:27017/cafe'
+} else {
+    conexion = 'mongodb+srv://adiaz:FZ3jNUIldhwVPtHR@cluster0-ozpt6.mongodb.net/cafe';
+}
+
+process.env.URLDB = conexion;
