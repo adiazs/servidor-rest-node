@@ -1,10 +1,11 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const _ = require('underscore'); //estandar
-const Usuario = require('../models/usuario'); //Declaracion de la "clase"
+const Usuario = require('../models/usuario'); //Declaracion del modelo de BD
 const app = express();
 
-
+//Llama al middleware para obtener la verificación del token que se genera en login.
+const { verificaToken, verificaAdmin_Role } = require('../middleware/autenticacion');
 
 /*****
  * req: Request o solicitud http
@@ -20,7 +21,7 @@ const app = express();
  */
 
 /* Se cambia la ruta para utilizar el metodo get: obtener registros */
-app.get('/usuario/:base', (req, res) => {
+app.get('/usuario/:base', verificaToken, (req, res) => {
     //Se envia la respuesta en formato html
     //res.send('Hola Mundo')
     //se envia la respuesta para el get en forma de json
@@ -48,7 +49,7 @@ app.get('/usuario/:base', (req, res) => {
  * cantidad: cantidad de registros a mostrar 
  */
 
-app.get('/usuario/', (req, res) => {
+app.get('/usuario', verificaToken, (req, res) => {
 
     let desde = Number(req.query.desde) || 0; //se usa query por ser parametros opcionales
     let cantidad = Number(req.query.cantidad) || 5; //si no especifica se envian solo 5
@@ -78,7 +79,7 @@ app.get('/usuario/', (req, res) => {
 se debe utilizar la libreria body parser para recibir un 
 objeto por el request.
 */
-app.post('/usuario', (req, res) => {
+app.post('/usuario', [verificaToken, verificaAdmin_Role], (req, res) => {
     /**el body va a aparecer cuando el body-parser procese 
      * cualquier payload en un objeto */
     let body = req.body; //ya aqui paso por el middleware
@@ -128,7 +129,7 @@ app.post('/usuario', (req, res) => {
 
 /*Metodo para utilizar el metodo put: Actualizar registros
 /usuario/:id para actualizar un registro */
-app.put('/usuario/:id', (req, res) => {
+app.put('/usuario/:id', [verificaToken, verificaAdmin_Role], (req, res) => {
 
     let id = req.params.id //se lee el parametro que debe ser identico al especificado en el url
         //res.json('put usuario');
@@ -174,7 +175,7 @@ app.put('/usuario/:id', (req, res) => {
 })
 
 /*Metodo para utilizar el metodo delete: Eliminar registros */
-app.delete('/usuario/:id', (req, res) => {
+app.delete('/usuario/:id', [verificaToken, verificaAdmin_Role], (req, res) => {
     let id = req.params.id;
 
     //eliminacion fisica
@@ -215,7 +216,7 @@ app.delete('/usuario/:id', (req, res) => {
 /**
  * Eliminación lógica de un registro
  */
-app.delete('/usuario/logico/:idEliminar', (req, res) => {
+app.delete('/usuario/logico/:idEliminar', [verificaToken, verificaAdmin_Role], (req, res) => {
     let id = req.params.idEliminar;
 
     Usuario.findByIdAndUpdate(id, { estado: false }, (err, usuarioBD) => {

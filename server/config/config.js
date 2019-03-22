@@ -18,6 +18,16 @@ process.env.PORT = process.env.PORT || 3000
 process.env.NODE_ENV = process.env.NODE_ENV || 'dev';
 
 /**
+ * Variable de expiracion de token
+ */
+process.env.CADUCIDAD_TOKEN = process.env.CADUCIDAD_TOKEN || 60 * 60 * 24 * 30
+
+/**
+ * Variable con la semilla para el token
+ */
+process.env.SEED = process.env.SEMILLA_TOKEN || 'este-es-el-seed-desarrollo';
+
+/**
  * Base de datos. Si 'dev' estoy en desarrollo sino utilizo
  * lo que tengo en la nube porque estoy en producción.
  */

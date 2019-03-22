@@ -12,9 +12,11 @@ const app = express() //se utiliza la libreria
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
     // parse application/json
-app.use(bodyParser.json())
-    //se llama y utiliza el archivo de usuario.js
-app.use(require('./routes/usuario'));
+app.use(bodyParser.json());
+//se llama y utiliza el archivo de usuario.js
+//app.use(require('./routes/usuario'));
+//app.use(require('./routes/login'))
+app.use(require('./routes/index'));
 
 /**Se realiza la conexion con la base de datos en el servidor 
  * protocolo: mongodb
